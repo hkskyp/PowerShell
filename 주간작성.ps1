@@ -20,8 +20,8 @@ function OpenWord()
 {
     $word = New-Object -ComObject Word.Application
     $word.Visible = $True
-    $doc = $word.docs.Add()
-    #$doc = $word.docs.Open($filename)
+    $doc = $word.documents.Add()
+    #$doc = $word.documents.Open($filename)
 
     $wdBulletGallery	= 1	#Bulleted list.
     $wdNumberGallery	= 2	#Numbered list.
@@ -68,6 +68,23 @@ function OpenWord()
     $selection.TypeText("bb")
     $selection.TypeParagraph()
 
+    $wdColumnBreak	= 8	#Column break at the insertion point.
+    $wdLineBreak	= 6	#Line break.
+    $wdLineBreakClearLeft	= 9	#Line break.
+    $wdLineBreakClearRight	= 10	#Line break.
+    $wdPageBreak	= 7	#Page break at the insertion point.
+    $wdSectionBreakContinuous	= 3	#New section without a corresponding page break.
+    $wdSectionBreakEvenPage	= 4	#Section break with the next section beginning on the next even-numbered page. If the section break falls on an even-numbered page, Word leaves the next odd-numbered page blank.
+    $wdSectionBreakNextPage	= 2	#Section break on next page.
+    $wdSectionBreakOddPage	= 5	#Section break with the next section beginning on the next odd-numbered page. If the section break falls on an odd-numbered page, Word leaves the next even-numbered page blank.
+    $wdTextWrappingBreak	= 11	#Ends the current line and forces the text to continue below a picture, table, or other item. The text continues on the next blank line that does not contain a table aligned with the left or right margin.
+    $selection.InsertBreak( $wdPageBreak)
+
+    $selection.Range.ListFormat.RemoveNumbers()
+    $selection.TypeText("a1")
+    $selection.TypeParagraph()
+    $selection.TypeText("b2")
+    $selection.TypeParagraph()
 
     return
     $word.Quit()
@@ -100,10 +117,11 @@ function OpenExcel([string]$filename)
     Write-Output ($ws.Cells.Item(3, 2).Interior.Color -eq 0xC47244)
     
     $xl.Quit()
-    $null = [System.Runtime.InteropServices.Marshal]::ReleaseComObject([System.__ComObject]$word)
+    $null = [System.Runtime.InteropServices.Marshal]::ReleaseComObject([System.__ComObject]$xl)
     [gc]::Collect()
     [gc]::WaitForPendingFinalizers()
     Remove-Variable xl
 }
 
-OpenExcel "D:\주간작성.xlsx"
+#OpenExcel "D:\주간작성.xlsx"
+OpenWord
